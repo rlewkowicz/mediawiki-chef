@@ -1,55 +1,22 @@
-sd.chef.wiki Cookbook
-=====================
-TODO: Enter the cookbook description here.
+Containerized Mediawiki 
+=======================
+What is it? 
+Installing media wiki is a bit of a pain. The directions are sometimes unclear on which packages are required for the php compile. At the very least in a platform agnostic manner. Theoretically this may even work with windows. As it stands it should work with either debian or red hat based systems. 
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+TODO: 
+Write an installer that utilizes chef in an decentralized manner. 
+All confs need to be templated to match the node attributes.
+Probably going to put media wiki in with php container. I could also just have a build box for media wiki that pulls the code and installs the deps. Idk yet. 
+I'd like to write sys d start stop for the containers. 
+
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-#### packages
-- `toaster` - sd.chef.wiki needs toaster to brown your bagel.
+Just docker! (todo: remove the mariadb package)
 
 Attributes
 ----------
 TODO: List your cookbook attributes here.
-
-e.g.
-#### sd.chef.wiki::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['sd.chef.wiki']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
-
-Usage
------
-#### sd.chef.wiki::default
-TODO: Write usage instructions for each cookbook.
-
-e.g.
-Just include `sd.chef.wiki` in your node's `run_list`:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[sd.chef.wiki]"
-  ]
-}
-```
 
 Contributing
 ------------
@@ -65,4 +32,4 @@ e.g.
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: Ryan Lewkowicz
