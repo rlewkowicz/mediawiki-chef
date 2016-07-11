@@ -71,8 +71,8 @@ docker_container node['mediawiki']['mariadb']['container_name'] do
   repo 'mariadb'
   tag "#{node['mediawiki']['mariadb']['tag']}"
   action :redeploy 
+  tty true
   network_mode 'host'
-  #port node['mediawiki']['mariadb']['port']
   env ["MYSQL_ROOT_PASSWORD=#{password}", "MYSQL_USER=root@#{node['ipaddress']}", "MYSQL_PASSWORD=#{password}"]
   volumes [ "#{datadir}:#{datadir}", '/root/.my.cnf:/etc/mysql/conf.d/.my.cnf' ]
   ignore_failure true
@@ -89,7 +89,6 @@ end
 docker_container node['mediawiki']['nginx']['container_name'] do
   repo 'nginx'
   tag node['mediawiki']['nginx']['tag']
-  #port node['mediawiki']['nginx']['port']
   network_mode 'host'
   volumes [ "#{sitehome}:#{sitehome}", '/etc/nginx:/etc/nginx' ]
   action :redeploy
@@ -97,31 +96,19 @@ docker_container node['mediawiki']['nginx']['container_name'] do
 end
 
 #Setup HHVM
-docker_image "rlewkowicz/hhvm" do
+docker_image 'fpm' do
+  repo 'rlewkowicz/php-fpm'
   action :pull
-  tag node['mediawiki']['hhvm']['tag']
+  tag 'latest'
 end
 
-docker_container 'remove hhvm' do
-  container_name node['mediawiki']['hhvm']['container_name']
-  action :delete
-  force true
-  ignore_failure true
-end
-
-docker_container node['mediawiki']['hhvm']['container_name'] do
-  repo 'rlewkowicz/hhvm'
-  tag node['mediawiki']['hhvm']['tag']
-  #port node['mediawiki']['hhvm']['port']
+docker_container 'fpm' do
+  repo 'rlewkowicz/php-fpm'
+  tag 'latest'
   action :redeploy
   network_mode 'host'
   volumes "#{sitehome}:#{sitehome}" 
-  command "/usr/bin/hhvm --mode server \
---config /etc/hhvm/php.ini \
---config /etc/hhvm/server.ini \
---user #{node['mediawiki']['hhvm']['user']} \
--vPidFile=/var/redeploy/hhvm/pid \
--d hhvm.repo.central.path = /tmp/hhvm.hhbc"
+  command 'php-fpm'
   ignore_failure true
   signal 'SIGKILL'
 end
@@ -141,7 +128,6 @@ docker_container "initalize media wiki" do
   container_name node['mediawiki']['container_name']
   repo 'rlewkowicz/mediawiki'
   tag node['mediawiki']['tag']
-  #port node['mediawiki']['hhvm']['port']
   action :redeploy
   network_disabled true
   tty true
@@ -162,7 +148,6 @@ docker_container "media wiki continuence" do
   container_name node['mediawiki']['container_name']
   repo 'rlewkowicz/mediawiki'
   tag node['mediawiki']['tag']
-  #port node['mediawiki']['hhvm']['port']
   network_disabled true
   action :redeploy
   tty true
