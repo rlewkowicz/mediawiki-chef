@@ -129,7 +129,7 @@ docker_container "parsoid" do
   repo 'rlewkowicz/parsoid'
   tag 'latest'
   action :redeploy
-  command 'node /parsoid/bin/server.js'
+  command 'cd /parsoid&&node /parsoid/bin/server.js'
   ignore_failure true
   volumes [ '/app/parsoid/config.yaml:/parsoid/config.yaml', '/app/parsoid/localsettings.js:/parsoid/localsettings.js' ]
 end
