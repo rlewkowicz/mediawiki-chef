@@ -125,11 +125,17 @@ execute 'init_mediawiki' do
 end
 
 #Setup Parsoid
+docker_image "rlewkowicz/parsoid" do
+  action :pull
+  tag 'latest'
+end
+
 docker_container "parsoid" do
   repo 'rlewkowicz/parsoid'
   tag 'latest'
   action :redeploy
-  command 'cd /parsoid&&node /parsoid/bin/server.js'
+  working_dir '/parsoid'
+  command 'node /parsoid/bin/server.js'
   ignore_failure true
   volumes [ '/app/parsoid/config.yaml:/parsoid/config.yaml', '/app/parsoid/localsettings.js:/parsoid/localsettings.js' ]
 end
