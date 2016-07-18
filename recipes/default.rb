@@ -131,7 +131,7 @@ docker_container "parsoid" do
   action :redeploy
   command 'node /parsoid/bin/server.js'
   ignore_failure true
-  volumes [ "/etc/parsoid/config.yaml:/parsoid/config.yaml", '/etc/parsoid/localsettings.js:/parsoid/localsettings.js' ]
+  volumes [ '/app/parsoid/config.yaml:/parsoid/config.yaml', '/app/parsoid/localsettings.js:/parsoid/localsettings.js' ]
 end
 
 docker_container "initalize media wiki" do
