@@ -134,6 +134,7 @@ docker_container "parsoid" do
   repo 'rlewkowicz/parsoid'
   tag 'latest'
   action :redeploy
+  network_mode 'host'
   working_dir '/parsoid'
   command 'node /parsoid/bin/server.js'
   ignore_failure true
