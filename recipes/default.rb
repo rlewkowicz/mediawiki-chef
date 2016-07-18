@@ -124,6 +124,16 @@ execute 'init_mediawiki' do
     action :nothing
 end
 
+#Setup Parsoid
+docker_container "parsoid" do
+  repo 'rlewkowicz/parsoid'
+  tag 'latest'
+  action :redeploy
+  command 'node /parsoid/bin/server.js'
+  ignore_failure true
+  volumes [ "/etc/parsoid/config.yaml:/parsoid/config.yaml", '/etc/parsoid/localsettings.js:/parsoid/localsettings.js' ]
+end
+
 docker_container "initalize media wiki" do
   container_name node['mediawiki']['container_name']
   repo 'rlewkowicz/mediawiki'
@@ -144,7 +154,7 @@ ruby_block 'mediawiki_init_set' do
   end
 end 
 
-docker_container "media wiki continuence" do
+docker_container "media wiki continuance" do
   container_name node['mediawiki']['container_name']
   repo 'rlewkowicz/mediawiki'
   tag node['mediawiki']['tag']
