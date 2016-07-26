@@ -4,6 +4,7 @@
 #
 # Maintainer: ryan.lewkowicz@spindance.com
 #
+package 'git'
 
 #Initialize some varibles
 def random_password
@@ -23,7 +24,7 @@ directory datadir do
   recursive true
 end
 
-directory sitehome do
+directory '/var/www' do
   recursive true
 end
 
@@ -43,10 +44,6 @@ docker_service 'default' do
 end
 
 #Set up Maria 
-
-#So we have the client outside of the container
-package 'mariadb' 
-
 file '/root/.my.cnf' do
   if !node['mycnf_set']
     content lazy { "[mysql]\nuser=root\npassword=#{password}\n\n[mysqldump]\nuser=root\npassword=#{password}\n[client]\nprotocol=tcp" }
@@ -54,7 +51,21 @@ file '/root/.my.cnf' do
     sensitive true
   end
 end
-  
+
+#Setup Site Home files
+git '/var/www/mediawiki' do
+  repository 'https://github.com/spindance/mediawiki.git'
+  revision 'master'
+  action :checkout
+  not_if {node['mediawiki_init']}
+  #user 'nginx'
+  #group 'nginx'
+end
+
+execute 'chown mediawiki' do
+  command 'chown -R nginx.nginx /var/www/mediawiki'
+end
+
 ruby_block 'mycnf_set' do
   block do
     node.normal['mycnf_set'] = true
@@ -90,12 +101,12 @@ docker_container node['mediawiki']['nginx']['container_name'] do
   repo 'nginx'
   tag node['mediawiki']['nginx']['tag']
   network_mode 'host'
-  volumes [ "#{sitehome}:#{sitehome}", '/etc/nginx:/etc/nginx' ]
+  volumes [ "#{sitehome}:#{sitehome}", '/etc/nginx:/etc/nginx', '/etc/passwd:/etc/passwd:ro', '/etc/shadow:/etc/shadow:ro', '/etc/group:/etc/group:ro' ]
   action :redeploy
   ignore_failure true
 end
 
-#Setup HHVM
+#Setup php-fpm
 docker_image 'fpm' do
   repo 'rlewkowicz/php-fpm'
   action :pull
@@ -107,24 +118,15 @@ docker_container 'fpm' do
   tag 'latest'
   action :redeploy
   network_mode 'host'
-  volumes "#{sitehome}:#{sitehome}" 
+  volumes [ "#{sitehome}:#{sitehome}", '/etc/passwd:/etc/passwd:ro', '/etc/shadow:/etc/shadow:ro', '/etc/group:/etc/group:ro' ]
   command 'php-fpm'
   ignore_failure true
   signal 'SIGKILL'
 end
 
-#Setup MediaWiki
-docker_image "rlewkowicz/mediawiki" do
-  action :pull
-  tag node['mediawiki']['tag']
-end
-  
-execute 'init_mediawiki' do
-    command 'docker cp mediawiki:/var/www/mediawiki /var/www/&&chown -R nginx.nginx /var/www/mediawiki'
-    action :nothing
-end
-
 #Setup Parsoid
+remote_directory '/etc/parsoid'
+
 docker_image "rlewkowicz/parsoid" do
   action :pull
   tag 'latest'
@@ -135,41 +137,30 @@ docker_container "parsoid" do
   tag 'latest'
   action :redeploy
   network_mode 'host'
-  working_dir '/parsoid'
+  working_dir '/etc/parsoid'
   command 'node /parsoid/bin/server.js'
   ignore_failure true
-  volumes [ '/app/parsoid/config.yaml:/parsoid/config.yaml', '/app/parsoid/localsettings.js:/parsoid/localsettings.js' ]
+  volumes [ '/etc/parsoid:/etc/parsoid' ]
 end
 
-docker_container "initalize media wiki" do
-  container_name node['mediawiki']['container_name']
-  repo 'rlewkowicz/mediawiki'
-  tag node['mediawiki']['tag']
-  action :redeploy
-  network_disabled true
-  tty true
-  command '/bin/bash'
-  ignore_failure true
-  notifies :run, 'execute[init_mediawiki]', :immediately
-  not_if { node['mediawiki_init'] }
-end  
+#Setup Plugins
+ark 'VisualEditor' do
+  url 'https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_27-7445820.tar.gz'
+  path '/var/www/mediawiki/extensions/'
+  owner 'nginx'
+  action :put
+end
+
+#Setup local config Gen.
+cookbook_file '/var/www/mediawiki/includes/installer/LocalSettingsGenerator.php' do
+  mode '0644'
+  owner 'nginx'
+  group 'nginx'
+  end
 
 ruby_block 'mediawiki_init_set' do
   block do
     node.normal['mediawiki_init'] = true
     node.save
   end
-end 
-
-docker_container "media wiki continuance" do
-  container_name node['mediawiki']['container_name']
-  repo 'rlewkowicz/mediawiki'
-  tag node['mediawiki']['tag']
-  network_disabled true
-  action :redeploy
-  tty true
-  command '/bin/bash'
-  ignore_failure true
-  volumes "#{sitehome}:/var/www/mediawiki"
-  only_if { node['mediawiki_init'] }
-end  
+end
