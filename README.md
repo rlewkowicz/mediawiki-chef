@@ -24,22 +24,28 @@ Setup
 =======================
 There are three folders of interest:
 
+```
 /var/lib/mysql (Can use existing installation. See Caveat Emptor)
 /var/www/mediawiki (This will be initialized only one. See Caveat Emptor)
 /etc/parsoid (This I think is going to be overridden each time. Todo:fix)
+```
 
 These will be configured on system initialization by chef. The following is not required, just a suggestion.
 So ideally your data is on designated data volumes. Our setup is such that there is a mounted data volume mounted on let’s say /app. Then you have all your folders in this folder so:
 
+```
 /app/
   mediawiki/
   mysql/
   parsoid/
+```
 
 From here, you’ll use bind mounts because docker doesn’t like symlinks. 
+```
 mount -o bind /app/parsoid /etc/parsoid
 mount -o bind /app/mysql/ /var/lib/mysql
 mount -o bind /app/mediawiki/ /var/www/mediawiki
+```
 
 This is nice, because now your system can be truly ephemeral and your data can live wherever.
 
