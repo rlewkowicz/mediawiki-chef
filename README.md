@@ -53,8 +53,7 @@ Usage and Common Tasks
 =======================
 ####Starting and Stopping Services 
 
-docker stop CONTAINER_NAME
-docker start CONTAINER_NAME
+docker stop CONTAINER_NAME; docker start CONTAINER_NAME
 
 ####Accessing Daemon Logs
 
