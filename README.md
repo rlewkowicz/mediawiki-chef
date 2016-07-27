@@ -1,5 +1,7 @@
 GitHub: https://github.com/spindance-ops/sd.chef.mediawiki
 
+#####Don't have a chef server? Ubuntu/Redhat Installer: https://github.com/spindance-ops/sd.chef.mediawiki/blob/master/MediaWikiInstaller.bash
+
 Containerized Mediawiki 
 =======================
 ###Known Issues and Todos (the short list I'm sure):
@@ -11,7 +13,6 @@ Containerized Mediawiki
 * Right now, docker start/stop container is your init scripts. I'd like to change this. 
 * Need to create a build pipeline for releases of various versions of things. 
 * Release all the docker files used to build fpm and parsoid (the fpm build is kind of opinionated at the moment). 
-* Write an installer that uses site install and chef local.
 * The code block insert is not working with the visual editor. It’s something to do with the parsoid service. I’m still working on that. Some documentation says VE is integrated since 1.26. But then other documentation says it only works in full with a parsoid service. 
 
 ###What is it? 
