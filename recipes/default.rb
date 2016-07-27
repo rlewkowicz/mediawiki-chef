@@ -143,6 +143,14 @@ docker_container "parsoid" do
   volumes [ '/etc/parsoid:/etc/parsoid' ]
 end
 
+#Setup Plugins
+ark 'VisualEditor' do
+  url 'https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_27-7445820.tar.gz'
+  path '/var/www/mediawiki/extensions/'
+  owner 'nginx'
+  action :put
+end
+
 #Setup local config Gen.
 cookbook_file '/var/www/mediawiki/includes/installer/LocalSettingsGenerator.php' do
   mode '0644'
