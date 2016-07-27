@@ -1,6 +1,6 @@
 GitHub: https://github.com/spindance-ops/sd.chef.mediawiki
 
-#####Don't have a chef server? Ubuntu/Redhat Installer: https://github.com/spindance-ops/sd.chef.mediawiki/blob/master/MediaWikiInstaller.bash
+#####Don't have a chef server? Ubuntu/Redhat Installer: https://raw.githubusercontent.com/spindance-ops/sd.chef.mediawiki/master/MediaWikiInstaller.bash
 
 Containerized Mediawiki 
 =======================
