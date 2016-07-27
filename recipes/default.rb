@@ -30,7 +30,7 @@ end
 
 #Set up Docker
 docker_installation 'default' do
-  repo 'test'
+  repo 'main'
   action :create
 end
 
