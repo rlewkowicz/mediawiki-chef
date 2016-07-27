@@ -11,6 +11,9 @@ platforms:
   - name: centos-7.2
     driver:
       provider: parallels
+  - name: ubuntu-14.04
+    driver:
+      provider: parallels
 
 suites:
   - name: default
