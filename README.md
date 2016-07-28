@@ -6,6 +6,7 @@ Containerized Mediawiki
 =======================
 ###Known Issues and Todos (the short list I'm sure):
 * My semver usage is probably terrible. It's all a patch! 
+* I don't know why I don't have exposed confs for php-fpm. An oversight worth fixing. 
 * The value of node attributes is dubious at best. Somethings are hard coded, somethings are attributes. 
 * Following the prior, conf files need better templatization (any templatization?). 
 * I have small changes I make to the mediawiki code base to allow for auto generation of LocalSettings in the base dir. May be a security risk in one form or another. 
