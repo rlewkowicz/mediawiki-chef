@@ -165,7 +165,9 @@ class LocalSettingsGenerator {
 
 		$localSettings .= "
 # End of automatically generated settings.
-# Add more configuration options below.\n\n";
+# Add more configuration options below.\n\n
+include 'PluginSettings.php';
+";
 
         $file = "/var/www/mediawiki/LocalSettings.php";
         $handle = fopen($file, 'w') or die('Cannot open file:  '.$file);
