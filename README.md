@@ -31,7 +31,8 @@ There are three folders of interest, these will be configured on system initiali
 /etc/parsoid (This I think is going to be overridden each time. Todo:fix)
 ```
 
-The following is not required, just a suggestion:
+The following is not required, just a suggestion.
+
 So ideally your data is on designated data volumes. Our setup is such that there is a mounted data volume mounted on let’s say /app. Then you have all your folders in this folder so:
 
 ```
