@@ -13,7 +13,7 @@ Containerized Mediawiki
 * Right now, docker start/stop container is your init scripts. I'd like to change this. 
 * Need to create a build pipeline for releases of various versions of things. 
 * Release all the docker files used to build fpm and parsoid (the fpm build is kind of opinionated at the moment). 
-* The code block insert is not working with the visual editor. It’s something to do with the parsoid service. I’m still working on that. Some documentation says VE is integrated since 1.26. But then other documentation says it only works in full with a parsoid service. 
+
 
 ###What is it? 
 Installing mediawiki is a bit of a pain (especially with the visual editor). The directions are sometimes unclear on which packages are required for the php compile. At the very least in a platform agnostic manner. As it stands it should work with either debian or redhat based systems that docker supports (at this very moment only tested on Centos 7.2.)
