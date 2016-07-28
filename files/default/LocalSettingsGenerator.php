@@ -163,11 +163,15 @@ class LocalSettingsGenerator {
 			$localSettings .= "\n";
 		}
 
-		$localSettings .= "
+		$localSettings .= <<<'EOD'
+
 # End of automatically generated settings.
-# Add more configuration options below.\n\n
-include 'PluginSettings.php';
-";
+# Add more configuration options below.
+
+if (file_exists('/var/www/mediawiki/PluginSettings.php'))
+  include '/var/www/mediawiki/PluginSettings.php';
+
+EOD;
 
         $file = "/var/www/mediawiki/LocalSettings.php";
         $handle = fopen($file, 'w') or die('Cannot open file:  '.$file);
