@@ -121,7 +121,7 @@ docker_container 'fpm' do
   tag 'latest'
   action :redeploy
   network_mode 'host'
-  volumes [ "#{sitehome}:#{sitehome}", '/etc', '/etc/passwd:/etc/passwd:ro', '/etc/shadow:/etc/shadow:ro', '/etc/group:/etc/group:ro' ]
+  volumes [ "#{sitehome}:#{sitehome}", '/etc:/etc', '/etc/passwd:/etc/passwd:ro', '/etc/shadow:/etc/shadow:ro', '/etc/group:/etc/group:ro' ]
   command 'php-fpm'
   ignore_failure true
   signal 'SIGKILL'
