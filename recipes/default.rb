@@ -4,6 +4,7 @@
 #
 # Maintainer: ryan.lewkowicz@spindance.com
 #
+
 package 'git'
 
 #Initialize some varibles
@@ -147,8 +148,14 @@ docker_container "parsoid" do
 end
 
 #Setup Plugins
+
+require 'mixlib/shellout'
+vedit = Mixlib::ShellOut.new("curl -s https://extdist.wmflabs.org/dist/extensions/ | grep -Eo VisualE.*tar.gz | awk -F'>' '{print $2}' | grep 1_27")
+vedit.run_command
+
+
 ark 'VisualEditor' do
-  url 'https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_27-7445820.tar.gz'
+  url "https://extdist.wmflabs.org/dist/extensions/#{vedit.stdout}"
   path '/var/www/mediawiki/extensions/'
   owner 'nginx'
   action :put
