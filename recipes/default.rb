@@ -153,9 +153,8 @@ require 'mixlib/shellout'
 vedit = Mixlib::ShellOut.new("curl -s https://extdist.wmflabs.org/dist/extensions/ | grep -Eo VisualE.*tar.gz | awk -F'>' '{print $2}' | grep 1_27")
 vedit.run_command
 
-
 ark 'VisualEditor' do
-  url "https://extdist.wmflabs.org/dist/extensions/#{vedit.stdout}"
+  url "https://extdist.wmflabs.org/dist/extensions/#{vedit.stdout.tr("\n", "")}"
   path '/var/www/mediawiki/extensions/'
   owner 'nginx'
   action :put
